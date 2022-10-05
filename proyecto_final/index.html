@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Proyecto_final</title>
+    <link rel="icon" href="https://cdn.pixabay.com/photo/2021/02/19/18/51/icon-6031219_960_720.png">
+</head>
+<body>
+    <head>
+        <div>
+
+            <p> <u>
+                <img src="https://cdn.pixabay.com/photo/2021/02/19/18/51/icon-6031219_960_720.png" align="right">Ingresa los datos del alumno 
+                </p></u>
+      </div>
+    </head>    
+    <body>
+     
+    <form class="formulario" method="POST">
+        <div>
+            <label>Nombre del alumno</label><input type="text" name="nombre">
+        </div>
+        <div>
+            <label>Edad del alumno</label><input type="number" name="edad" min="3" max="100">
+        </div>
+        <div>
+            <br><input type="submit" value="Agregar" class="boton agregar">
+        </div>
+    </form>
+     
+    <table id="listado" class='hide'>
+        <thead>
+            <th>Alumno</th>
+            <th>Edad</th>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    </body>   
+   
+    <script>
+        document.querySelector("input[type=submit]").addEventListener("click",function(e){
+            e.preventDefault();
+         
+            const nombre=document.querySelector("input[name=nombre]");
+            const edad=document.querySelector("input[name=edad]");
+         
+            // mostramos un error si no ha recibido el nombre
+            if (!nombre.value) {
+                nombre.classList.add("error");
+                return;
+            }
+            nombre.classList.remove("error");
+         
+            if (isNaN(parseInt(edad.value)) || parseInt(edad.value)<=0) {
+                edad.classList.add("error");
+                return;
+            }
+            edad.classList.remove("error");
+         
+            agregarFila(nombre.value, edad.value);
+            agregarInput(nombre.value, edad.value);
+       
+            edad.value="";
+            nombre.value="";
+            nombre.focus();
+         
+        });
+        
+        function agregarFila(nombre, edad) {
+    
+            const tr=document.createElement("tr");
+         
+            const tdNombre=document.createElement("td");
+            let txt=document.createTextNode(nombre);
+            tdNombre.appendChild(txt);
+            tdNombre.className="nombre";
+         
+            const tdEdad=document.createElement("td");
+            txt=document.createTextNode(edad);
+            tdEdad.appendChild(txt);
+            tdEdad.className="right";
+         
+            tr.appendChild(tdNombre);
+            tr.appendChild(tdEdad);
+           
+         
+            const tbody=document.getElementById("listado").querySelector("tbody").appendChild(tr);
+         
+    
+            document.getElementById("listado").classList.remove("hide");
+        }
+         
+    
+        function eliminarFila(e) {
+            const tr=this.closest("tr")
+            const nombre=tr.querySelector(".nombre").innerText;
+            const edad=tr.querySelector(".right").innerText;
+         
+            eliminarInput(nombre, edad);
+            tr.remove();
+    
+            if (document.getElementById("listado").querySelector("tbody").querySelectorAll("tr").length==0) {
+                document.getElementById("listado").classList.add("hide");
+            }
+        }
+         
+    
+        function agregarInput(nombre, edad) {
+            const input=document.createElement("input");
+            input.type="hidden";
+            input.name="nombres[]";
+            input.value=nombre+"-"+edad;
+         
+            document.querySelector("form").appendChild(input);
+        }
+         
+    
+        function eliminarInput(nombre, edad) {
+            const input=document.querySelector("input[type=hidden][value="+nombre+"-"+edad+"]");
+            input.remove();
+        }
+        </script>
+     
+</body>
+</html>
